@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
-require "resque/cloudwatch/metrics"
+require 'resque/cloudwatch/metrics'
+
+Resque::CloudWatch::Metrics.run(ARGV)
