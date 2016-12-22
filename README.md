@@ -18,6 +18,10 @@ Or install it yourself as:
 
     $ gem install resque-cloudwatch-metrics
 
+Or use Docker:
+
+    $ docker run --rm m4i0/resque-cloudwatch-metrics --help
+
 ## Usage
 
 ```
