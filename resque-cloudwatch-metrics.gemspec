@@ -5,7 +5,7 @@ require 'resque/cloudwatch/metrics/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "resque-cloudwatch-metrics"
-  spec.version       = Resque::Cloudwatch::Metrics::VERSION
+  spec.version       = Resque::CloudWatch::Metrics::VERSION
   spec.authors       = ["Masaki Takeuchi"]
   spec.email         = ["m.ishihara@gmail.com"]
 
