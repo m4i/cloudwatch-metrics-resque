@@ -2,6 +2,10 @@
 
 Send Resque.info to CloudWatch Metrics
 
+[![Gem Version](https://badge.fury.io/rb/resque-cloudwatch-metrics.svg)](https://badge.fury.io/rb/resque-cloudwatch-metrics)
+[![Code Climate](https://codeclimate.com/github/m4i/resque-cloudwatch-metrics/badges/gpa.svg)](https://codeclimate.com/github/m4i/resque-cloudwatch-metrics)
+[![Dependency Status](https://gemnasium.com/badges/github.com/m4i/resque-cloudwatch-metrics.svg)](https://gemnasium.com/github.com/m4i/resque-cloudwatch-metrics)
+
 ## Installation
 
 Add this line to your application's Gemfile:
