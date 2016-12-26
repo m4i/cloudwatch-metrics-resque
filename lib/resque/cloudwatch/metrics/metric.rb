@@ -61,8 +61,6 @@ module Resque
         end
 
         def to_cloudwatch_metric_data
-          dimensions = [{ name: 'namespace', value: @namespace.to_s }]
-
           %i(pending processed failed queues workers working processing).map do |key|
             build_cloudwatch_metric_datum(key.to_s.capitalize, public_send(key))
           end +
