@@ -4,6 +4,7 @@ require 'resque/cloudwatch/metrics/version'
 require 'optparse'
 require 'aws-sdk-core'
 require 'resque'
+require 'resque/cloudwatch/metrics/metric'
 
 module Resque
   module CloudWatch
@@ -47,8 +48,6 @@ module Resque
         @redis_namespace = redis_namespace
         @interval = interval
         @cw_namespace = cw_namespace
-
-        @mutex = Mutex.new
       end
 
       def run
@@ -66,19 +65,11 @@ module Resque
       private
 
       def run_once
-        now, infos = @mutex.synchronize { [Time.now, get_infos] }
-        put_metric_data(infos.flat_map { |args| build_metric_data(now, *args) })
-      end
-
-      def get_infos
-        redis_namespaces.map do |redis_namespace|
-          Resque.redis.namespace = redis_namespace
-          [
-            redis_namespace,
-            Resque.info,
-            Resque.queues.map { |name| [name, Resque.size(name)] },
-          ]
-        end
+        put_metric_data(
+          redis_namespaces
+            .map { |redis_namespace| Metric.create(redis_namespace) }
+            .flat_map(&:to_cloudwatch_metric_data)
+        )
       end
 
       def redis_namespaces
@@ -93,29 +84,6 @@ module Resque
           end
         else
           [Resque.redis.namespace]
-        end
-      end
-
-      def build_metric_data(timestamp, redis_namespace, info, queue_sizes)
-        dimensions = [{ name: 'namespace', value: redis_namespace.to_s }]
-
-        %i(pending processed failed queues workers working).map do |key|
-          {
-            metric_name: key.to_s.capitalize,
-            dimensions:  dimensions,
-            timestamp:   timestamp,
-            value:       info[key],
-            unit:        'Count',
-          }
-        end +
-        queue_sizes.map do |name, size|
-          {
-            metric_name: 'Pending',
-            dimensions:  dimensions + [{ name: 'queue', value: name }],
-            timestamp:   timestamp,
-            value:       size,
-            unit:        'Count',
-          }
         end
       end
 
