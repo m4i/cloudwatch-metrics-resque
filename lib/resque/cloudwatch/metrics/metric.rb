@@ -56,13 +56,17 @@ module Resque
         def workers;   @info[:workers];   end
         def working;   @info[:working];   end
 
+        def not_working
+          [0, workers - working].max
+        end
+
         def processing
           incremental_size_of_processed + working
         end
 
         def to_cloudwatch_metric_data
-          %i(pending processed failed queues workers working processing).map do |key|
-            build_cloudwatch_metric_datum(key.to_s.capitalize, public_send(key))
+          %i(pending processed failed queues workers working not_working processing).map do |key|
+            build_cloudwatch_metric_datum(camelize(key.to_s), public_send(key))
           end +
           @queue_sizes.map do |name, size|
             build_cloudwatch_metric_datum('Pending', size, queue: name)
@@ -91,6 +95,10 @@ module Resque
           else
             [0, processed - @previous_processed].max
           end
+        end
+
+        def camelize(string)
+          string.gsub(/(?:^|_)(.)/) { $1.upcase }
         end
       end
 
