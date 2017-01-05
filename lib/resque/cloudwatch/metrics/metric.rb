@@ -31,13 +31,13 @@ module Resque
           end
 
           def get_previous_processed(namespace)
-            @_previous_processed ||= {}
-            @_previous_processed[namespace]
+            @previous_processed ||= {}
+            @previous_processed[namespace]
           end
 
           def set_previous_processed(namespace, previous_processed)
-            @_previous_processed ||= {}
-            @_previous_processed[namespace] = previous_processed
+            @previous_processed ||= {}
+            @previous_processed[namespace] = previous_processed
           end
         end
 
@@ -86,7 +86,7 @@ module Resque
         end
 
         def default_dimensions
-          @_default_dimensions = Dimensions.new(namespace: @namespace.to_s)
+          Dimensions.new(namespace: @namespace.to_s)
         end
 
         def incremental_size_of_processed

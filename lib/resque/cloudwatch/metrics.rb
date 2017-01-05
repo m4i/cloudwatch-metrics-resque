@@ -89,10 +89,10 @@ module Resque
 
       def put_metric_data(metric_data)
         metric_data.each_slice(MAX_METRIC_DATA_PER_PUT).map do |data|
-          Thread.start(data) do |data|
-            cloudwatch.put_metric_data(
+          Thread.start(data, cloudwatch) do |data_, cloudwatch_|
+            cloudwatch_.put_metric_data(
               namespace: @cw_namespace,
-              metric_data: data,
+              metric_data: data_,
             )
           end
         end.each(&:join)
