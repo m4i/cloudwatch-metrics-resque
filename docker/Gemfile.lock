@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk-core (2.6.41)
+    aws-sdk-core (2.6.44)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
     aws-sigv4 (1.0.0)
