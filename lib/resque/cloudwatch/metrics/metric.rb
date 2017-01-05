@@ -77,7 +77,7 @@ module Resque
           if @queue_sizes
             metric_data.concat(
               @queue_sizes.map do |name, size|
-                build_cloudwatch_metric_datum('Pending', size, queue: name)
+                build_cloudwatch_metric_datum('Pending', size, Queue: name)
               end
             )
           end
@@ -102,7 +102,7 @@ module Resque
         end
 
         def default_dimensions
-          Dimensions.new(namespace: @namespace.to_s)
+          Dimensions.new(Namespace: @namespace.to_s)
         end
 
         def incremental_size_of_processed
