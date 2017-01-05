@@ -6,18 +6,21 @@ module Resque
   module CloudWatch
     class Metrics
       class Metric
+        DEFAULT_METRIC_NAMES = %i(pending processed failed queues workers working).freeze
+
         class << self
           @@mutex = Mutex.new
 
-          def create(namespace)
+          def create(namespace, skip: [], extra: [])
             @@mutex.synchronize do
               Resque.redis.namespace = namespace
               new(
                 Time.now,
                 namespace,
                 Resque.info,
-                current_queue_sizes,
+                !skip.include?(:pending_per_queue) && current_queue_sizes,
                 get_previous_processed(namespace),
+                skip: skip, extra: extra,
               ).tap do |metric|
                 set_previous_processed(namespace, metric.processed)
               end
@@ -41,12 +44,14 @@ module Resque
           end
         end
 
-        def initialize(time, namespace, info, queue_sizes, previous_processed)
+        def initialize(time, namespace, info, queue_sizes, previous_processed, skip: [], extra: [])
           @time = time
           @namespace = namespace
           @info = info
           @queue_sizes = queue_sizes
           @previous_processed = previous_processed
+          @skip = skip
+          @extra = extra
         end
 
         def pending;   @info[:pending];   end
@@ -65,15 +70,26 @@ module Resque
         end
 
         def to_cloudwatch_metric_data
-          %i(pending processed failed queues workers working not_working processing).map do |key|
+          metric_data = metric_names.map do |key|
             build_cloudwatch_metric_datum(camelize(key.to_s), public_send(key))
-          end +
-          @queue_sizes.map do |name, size|
-            build_cloudwatch_metric_datum('Pending', size, queue: name)
           end
+
+          if @queue_sizes
+            metric_data.concat(
+              @queue_sizes.map do |name, size|
+                build_cloudwatch_metric_datum('Pending', size, queue: name)
+              end
+            )
+          end
+
+          metric_data
         end
 
         private
+
+        def metric_names
+          DEFAULT_METRIC_NAMES - @skip + @extra
+        end
 
         def build_cloudwatch_metric_datum(metric_name, value, dimensions = {})
           {

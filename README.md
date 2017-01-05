@@ -39,6 +39,15 @@ Usage: resque-cloudwatch-metrics [options]
         --redis-namespace <namespace>
         --cw-namespace <namespace>
     -i, --interval <interval>
+        --skip-pending
+        --skip-processed
+        --skip-failed
+        --skip-queues
+        --skip-workers
+        --skip-working
+        --skip-pending-per-queue
+        --not-working
+        --processing
 ```
 
 ## Development

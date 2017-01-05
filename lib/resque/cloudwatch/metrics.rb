@@ -22,6 +22,8 @@ module Resque
         def parse_arguments(args)
           options = {}
           redis = {}
+          skip = []
+          extra = []
 
           opt = OptionParser.new
           opt.on('-h', '--host <host>')           { |v| redis[:host] = v }
@@ -33,21 +35,38 @@ module Resque
           opt.on('--redis-namespace <namespace>') { |v| options[:redis_namespace] = v }
           opt.on('--cw-namespace <namespace>')    { |v| options[:cw_namespace] = v }
           opt.on('-i', '--interval <interval>')   { |v| options[:interval] = v.to_f }
+          opt.on('--skip-pending')                { skip << :pending }
+          opt.on('--skip-processed')              { skip << :processed }
+          opt.on('--skip-failed')                 { skip << :failed }
+          opt.on('--skip-queues')                 { skip << :queues }
+          opt.on('--skip-workers')                { skip << :workers }
+          opt.on('--skip-working')                { skip << :working }
+          opt.on('--skip-pending-per-queue')      { skip << :pending_per_queue }
+          opt.on('--not-working')                 { extra << :not_working }
+          opt.on('--processing')                  { extra << :processing }
           opt.parse(args)
 
           options[:redis] ||= redis unless redis.empty?
+
+          metric = {}
+          metric[:skip] = skip unless skip.empty?
+          metric[:extra] = extra unless extra.empty?
+          options[:metric] = metric unless metric.empty?
+
           options
         end
       end
 
       def initialize(redis: nil,
                      redis_namespace: nil,
+                     cw_namespace: DEFAULT_CW_NAMESPACE,
                      interval: nil,
-                     cw_namespace: DEFAULT_CW_NAMESPACE)
+                     metric: {})
         Resque.redis = redis if redis
         @redis_namespace = redis_namespace
         @interval = interval
         @cw_namespace = cw_namespace
+        @metric_options = metric
       end
 
       def run
@@ -67,7 +86,7 @@ module Resque
       def run_once
         put_metric_data(
           redis_namespaces
-            .map { |redis_namespace| Metric.create(redis_namespace) }
+            .map { |redis_namespace| Metric.create(redis_namespace, @metric_options) }
             .flat_map(&:to_cloudwatch_metric_data)
         )
       end
