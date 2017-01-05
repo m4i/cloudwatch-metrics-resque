@@ -44,6 +44,7 @@ module Resque
           opt.on('--skip-pending-per-queue')      { skip << :pending_per_queue }
           opt.on('--not-working')                 { extra << :not_working }
           opt.on('--processing')                  { extra << :processing }
+          opt.on('--dryrun')                      { options[:dryrun] = true }
           opt.parse(args)
 
           options[:redis] ||= redis unless redis.empty?
@@ -61,12 +62,14 @@ module Resque
                      redis_namespace: nil,
                      cw_namespace: DEFAULT_CW_NAMESPACE,
                      interval: nil,
-                     metric: {})
+                     metric: {},
+                     dryrun: false)
         Resque.redis = redis if redis
         @redis_namespace = redis_namespace
         @interval = interval
         @cw_namespace = cw_namespace
         @metric_options = metric
+        @dryrun = dryrun
       end
 
       def run
@@ -107,6 +110,11 @@ module Resque
       end
 
       def put_metric_data(metric_data)
+        if @dryrun
+          dump_metric_data(metric_data)
+          return
+        end
+
         metric_data.each_slice(MAX_METRIC_DATA_PER_PUT).map do |data|
           Thread.start(data, cloudwatch) do |data_, cloudwatch_|
             cloudwatch_.put_metric_data(
@@ -115,6 +123,15 @@ module Resque
             )
           end
         end.each(&:join)
+      end
+
+      def dump_metric_data(metric_data)
+        puts metric_data.to_json(
+          indent:    ' ' * 2,
+          space:     ' ',
+          object_nl: "\n",
+          array_nl:  "\n",
+        )
       end
 
       def cloudwatch

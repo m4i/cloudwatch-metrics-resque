@@ -48,6 +48,7 @@ Usage: resque-cloudwatch-metrics [options]
         --skip-pending-per-queue
         --not-working
         --processing
+        --dryrun
 ```
 
 ## Development
