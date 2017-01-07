@@ -30,6 +30,9 @@ Or use Docker:
 
 ```
 Usage: resque-cloudwatch-metrics [options]
+        --namespace <namespace>
+        --interval <seconds>
+        --dryrun
     -h, --host <host>
     -p, --port <port>
     -s, --socket <socket>
@@ -37,18 +40,15 @@ Usage: resque-cloudwatch-metrics [options]
     -n, --db <db>
         --url <url>
         --redis-namespace <namespace>
-        --cw-namespace <namespace>
-    -i, --interval <interval>
-        --skip-pending
-        --skip-processed
-        --skip-failed
-        --skip-queues
-        --skip-workers
-        --skip-working
-        --skip-pending-per-queue
-        --not-working
-        --processing
-        --dryrun
+        --[no-]pending
+        --[no-]processed
+        --[no-]failed
+        --[no-]queues
+        --[no-]workers
+        --[no-]working
+        --[no-]pending-per-queue
+        --[no-]not-working
+        --[no-]processing
 ```
 
 ## Development

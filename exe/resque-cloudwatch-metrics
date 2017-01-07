@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require 'resque/cloudwatch/metrics'
+require 'cloud_watch_metrics/resque'
 
-Resque::CloudWatch::Metrics.run(ARGV)
+Version = CloudWatchMetrics::Resque::VERSION
+CloudWatchMetrics::Resque.run(ARGV)

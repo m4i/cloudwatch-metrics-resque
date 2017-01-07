@@ -1,12 +1,8 @@
-FROM alpine
+FROM ruby:2.4-alpine
 
 RUN set -eux \
 	&& apk add --no-cache \
-		ca-certificates \
 		openssl \
-		ruby \
-		ruby-bundler \
-		ruby-json \
 	# dumb-init
 	&& VERSION=1.2.0 \
 	&& wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v$VERSION/dumb-init_${VERSION}_amd64 \
