@@ -1,17 +1,17 @@
-# Resque::CloudWatch::Metrics
+# CloudWatchMetrics::Resque
 
 Send Resque.info to CloudWatch Metrics
 
-[![Gem Version](https://badge.fury.io/rb/resque-cloudwatch-metrics.svg)](https://badge.fury.io/rb/resque-cloudwatch-metrics)
-[![Code Climate](https://codeclimate.com/github/m4i/resque-cloudwatch-metrics/badges/gpa.svg)](https://codeclimate.com/github/m4i/resque-cloudwatch-metrics)
-[![Dependency Status](https://gemnasium.com/badges/github.com/m4i/resque-cloudwatch-metrics.svg)](https://gemnasium.com/github.com/m4i/resque-cloudwatch-metrics)
+[![Gem Version](https://badge.fury.io/rb/cloudwatch-metrics-resque.svg)](https://badge.fury.io/rb/cloudwatch-metrics-resque)
+[![Code Climate](https://codeclimate.com/github/m4i/cloudwatch-metrics-resque/badges/gpa.svg)](https://codeclimate.com/github/m4i/cloudwatch-metrics-resque)
+[![Dependency Status](https://gemnasium.com/badges/github.com/m4i/cloudwatch-metrics-resque.svg)](https://gemnasium.com/github.com/m4i/cloudwatch-metrics-resque)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'resque-cloudwatch-metrics'
+gem 'cloudwatch-metrics-resque'
 ```
 
 And then execute:
@@ -20,16 +20,16 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install resque-cloudwatch-metrics
+    $ gem install cloudwatch-metrics-resque
 
 Or use Docker:
 
-    $ docker run --rm m4i0/resque-cloudwatch-metrics --help
+    $ docker run --rm m4i0/cloudwatch-metrics-resque --help
 
 ## Usage
 
 ```
-Usage: resque-cloudwatch-metrics [options]
+Usage: cloudwatch-metrics-resque [options]
         --namespace <namespace>
         --interval <seconds>
         --dryrun
@@ -59,7 +59,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/m4i/resque-cloudwatch-metrics. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/m4i/cloudwatch-metrics-resque. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 

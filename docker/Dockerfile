@@ -8,7 +8,7 @@ RUN set -eux \
 	&& wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v$VERSION/dumb-init_${VERSION}_amd64 \
 	&& chmod +x /usr/local/bin/dumb-init
 
-ENTRYPOINT ["dumb-init", "resque-cloudwatch-metrics"]
+ENTRYPOINT ["dumb-init", "cloudwatch-metrics-resque"]
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock /app/
