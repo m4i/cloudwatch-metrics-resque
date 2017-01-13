@@ -10,6 +10,20 @@ module CloudWatchMetrics
     MAX_METRIC_DATA_PER_PUT = 20
 
     class << self
+      def convert_symbol_keys_from_dash_to_underscore!(hash)
+        hash.keys.each do |key|
+          if key.match?('-')
+            hash[key.to_s.tr('-', '_').to_sym] = hash.delete(key)
+          end
+        end
+      end
+
+      def delete_keys!(hash, keys)
+        hash
+          .select { |key,| keys.include?(key) }
+          .each_key { |key| hash.delete(key) }
+      end
+
       def accept_hash(option_parser)
         option_parser.accept(Hash) do |s,|
           break s unless s

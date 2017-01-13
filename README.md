@@ -31,15 +31,6 @@ Or use Docker:
 ```
 Usage: cloudwatch-metrics-resque [options]
         --namespace <namespace>
-        --interval <seconds>
-        --dry-run
-    -h, --host <host>
-    -p, --port <port>
-    -s, --socket <socket>
-    -a, --password <password>
-    -n, --db <db>
-        --url <url>
-        --redis-namespace <namespace>
         --[no-]pending
         --[no-]processed
         --[no-]failed
@@ -49,6 +40,15 @@ Usage: cloudwatch-metrics-resque [options]
         --[no-]pending-per-queue
         --[no-]not-working
         --[no-]processing
+        --interval <seconds>
+        --dry-run
+    -h, --host <host>
+    -p, --port <port>
+    -s, --socket <socket>
+    -a, --password <password>
+    -n, --db <db>
+        --url <url>
+        --redis-namespace <namespace>
 ```
 
 ## Development

@@ -33,19 +33,24 @@ module CloudWatchMetrics
         {}.tap do |options|
           option_parser.parse(args, into: options)
 
-          convert_symbol_keys_from_dash_to_underscore(options)
+          Util.convert_symbol_keys_from_dash_to_underscore!(options)
 
-          redis = delete_keys(options, %i(host port socket password db))
+          redis = Util.delete_keys!(options, %i(host port socket password db))
           redis = options.delete(:url) if options.key?(:url)
           options[:redis] = redis unless redis.empty?
 
-          options[:metrics] = delete_keys(options, DEFAULT_METRICS.keys)
+          options[:metrics] = Util.delete_keys!(options, DEFAULT_METRICS.keys)
         end
       end
 
       def option_parser
         OptionParser.new do |opt|
           opt.on('--namespace <namespace>', String)
+
+          DEFAULT_METRICS.each_key do |key|
+            opt.on("--[no-]#{key.to_s.tr('_', '-')}", TrueClass)
+          end
+
           opt.on('--interval <seconds>', Float)
           opt.on('--dry-run', TrueClass)
 
@@ -56,42 +61,24 @@ module CloudWatchMetrics
           opt.on('-n', '--db <db>', String)
           opt.on('--url <url>', String)
           opt.on('--redis-namespace <namespace>', String)
-
-          DEFAULT_METRICS.each_key do |key|
-            opt.on("--[no-]#{key.to_s.tr('_', '-')}", TrueClass)
-          end
         end
-      end
-
-      def convert_symbol_keys_from_dash_to_underscore(hash)
-        hash.keys.each do |key|
-          if key.match?('-')
-            hash[key.to_s.tr('-', '_').to_sym] = hash.delete(key)
-          end
-        end
-      end
-
-      def delete_keys(hash, keys)
-        hash
-          .select { |key,| keys.include?(key) }
-          .each_key { |key| hash.delete(key) }
       end
     end
 
     def initialize(
       namespace:       DEFAULT_NAMESPACE,
+      metrics:         {},
       interval:        nil,
       dry_run:         false,
       redis:           nil,
-      redis_namespace: nil,
-      metrics:         {}
+      redis_namespace: nil
     )
       @namespace = namespace
+      @metrics = DEFAULT_METRICS.merge(metrics)
       @interval = interval
       @dry_run = dry_run
       ::Resque.redis = redis if redis
       @redis_namespace = redis_namespace
-      @metrics = DEFAULT_METRICS.merge(metrics)
     end
 
     private
