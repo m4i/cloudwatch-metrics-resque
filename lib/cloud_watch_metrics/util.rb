@@ -21,8 +21,8 @@ module CloudWatchMetrics
       end
 
       # @return [void]
-      def put_metric_data(namespace, metric_data, dryrun: false)
-        return dump_metric_data(namespace, metric_data) if dryrun
+      def put_metric_data(namespace, metric_data, dry_run: false)
+        return dump_metric_data(namespace, metric_data) if dry_run
 
         metric_data.each_slice(MAX_METRIC_DATA_PER_PUT).map do |data|
           Thread.start(data, cloudwatch) do |data_, cloudwatch_|

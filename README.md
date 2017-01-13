@@ -32,7 +32,7 @@ Or use Docker:
 Usage: cloudwatch-metrics-resque [options]
         --namespace <namespace>
         --interval <seconds>
-        --dryrun
+        --dry-run
     -h, --host <host>
     -p, --port <port>
     -s, --socket <socket>

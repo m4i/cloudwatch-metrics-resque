@@ -47,7 +47,7 @@ module CloudWatchMetrics
         OptionParser.new do |opt|
           opt.on('--namespace <namespace>', String)
           opt.on('--interval <seconds>', Float)
-          opt.on('--dryrun', TrueClass)
+          opt.on('--dry-run', TrueClass)
 
           opt.on('-h', '--host <host>', String)
           opt.on('-p', '--port <port>', Integer)
@@ -81,14 +81,14 @@ module CloudWatchMetrics
     def initialize(
       namespace:       DEFAULT_NAMESPACE,
       interval:        nil,
-      dryrun:          false,
+      dry_run:         false,
       redis:           nil,
       redis_namespace: nil,
       metrics:         {}
     )
       @namespace = namespace
       @interval = interval
-      @dryrun = dryrun
+      @dry_run = dry_run
       ::Resque.redis = redis if redis
       @redis_namespace = redis_namespace
       @metrics = DEFAULT_METRICS.merge(metrics)
@@ -101,7 +101,7 @@ module CloudWatchMetrics
         builder.build(info(redis_namespace).update)
       end
 
-      Util.put_metric_data(@namespace, metric_data, dryrun: @dryrun)
+      Util.put_metric_data(@namespace, metric_data, dry_run: @dry_run)
     end
 
     def redis_namespaces
