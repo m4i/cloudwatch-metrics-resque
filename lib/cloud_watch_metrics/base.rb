@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'timeout'
+
 module CloudWatchMetrics
   module Base
     def self.included(mod)
