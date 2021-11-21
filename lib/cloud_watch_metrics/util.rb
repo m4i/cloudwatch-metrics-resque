@@ -2,7 +2,7 @@
 
 require 'json'
 
-require 'aws-sdk-core'
+require 'aws-sdk-cloudwatch'
 
 module CloudWatchMetrics
   module Util
