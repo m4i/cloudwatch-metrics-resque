@@ -74,7 +74,7 @@ module CloudWatchMetrics
       redis_namespace: nil
     )
       @namespace = namespace
-      @metrics = DEFAULT_METRICS.merge(metrics)
+      @metrics = metrics.merge(DEFAULT_METRICS)
       @interval = interval
       @dry_run = dry_run
       ::Resque.redis = redis if redis
